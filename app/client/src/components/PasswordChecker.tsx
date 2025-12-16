@@ -50,14 +50,14 @@ const PasswordStrengthChecks: React.FC<Props> = ({ password }) => {
           check.allowed && (
             <div key={index} className="flex items-center gap-2">
               {check.isValid ? (
-                <CheckCircle className="text-green-500 w-3 h-3" />
+                <CheckCircle className="text-green-400 w-3 h-3" />
               ) : (
-                <XCircle className="text-red-500 w-3 h-3" />
+                <XCircle className="text-red-400 w-3 h-3" />
               )}
               <span
                 className={clsx("transition-colors text-xs", {
-                  "text-green-600": check.isValid,
-                  "text-red-500": !check.isValid,
+                  "text-green-400": check.isValid,
+                  "text-red-400": !check.isValid,
                 })}
               >
                 {check.label}

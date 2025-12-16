@@ -9,6 +9,7 @@ export const API = {
       SEND_OTP: "/auth/send-otp",
       VALIDATE_OTP: "/auth/validate-otp",
       PROVIDERS: "/auth/providers",
+      REFRESH: "/auth/refresh",
     },
     PRIVATE: {
       LOGOUT: "/auth/logout",

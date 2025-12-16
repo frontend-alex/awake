@@ -25,7 +25,10 @@ const login = async (email: string, password: string) => {
 
     if (!user.emailVerified) throw createError("EMAIL_NOT_VERIFIED", { extra: { otpRedirect: true, email } });
 
-    return jwtUtils.generateToken(user.id, user.username);
+    const accessToken = jwtUtils.generateToken(user.id, user.username);
+    const refreshToken = jwtUtils.generateRefreshToken(user.id, user.username);
+
+    return { accessToken, refreshToken };
   } catch (err) {
     throw err;
   }
@@ -33,7 +36,27 @@ const login = async (email: string, password: string) => {
 
 const handleAuthCallback = async (user: DecodedUser) => {
   if (!user) throw createError("USER_NOT_FOUND");
-  return jwtUtils.generateToken(user.id, user.username);
+  
+  const accessToken = jwtUtils.generateToken(user.id, user.username);
+  const refreshToken = jwtUtils.generateRefreshToken(user.id, user.username);
+
+  return { accessToken, refreshToken };
+};
+
+const refreshTokens = async (refreshToken: string) => {
+  try {
+    const decoded = jwtUtils.verifyRefreshToken(refreshToken);
+    
+    const user = await UserRepo.findById(decoded.id);
+    if (!user) throw createError("USER_NOT_FOUND");
+
+    const newAccessToken = jwtUtils.generateToken(user.id, user.username);
+    const newRefreshToken = jwtUtils.generateRefreshToken(user.id, user.username);
+
+    return { accessToken: newAccessToken, refreshToken: newRefreshToken };
+  } catch (err) {
+    throw err;
+  }
 };
 
 
@@ -168,6 +191,7 @@ export const AuthService = {
   validateOtp,
   resetPassword,
   updatePassword,
+  refreshTokens,
   sendPasswordEmail,
   handleAuthCallback,
 };

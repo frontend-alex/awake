@@ -14,8 +14,8 @@ function generateToken(
   });
 }
 
-function generateRefreshToken(userId: string): string {
-  return jwt.sign({ id: userId }, env.JWT_REFRESH_SECRET as Secret, {
+function generateRefreshToken(userId: string, username: string): string {
+  return jwt.sign({ id: userId, username }, env.JWT_REFRESH_SECRET as Secret, {
     expiresIn: "7d",
   });
 }

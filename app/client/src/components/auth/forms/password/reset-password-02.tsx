@@ -10,21 +10,21 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { LoaderCircle } from "lucide-react";
-import type { ResetPasswordFormProps } from "@/types/types";
+import type { UpdatePasswordFormProps } from "@/types/types";
 
 const PasswordStrengthChecks = lazy(() => import("@/components/PasswordChecker"))
 
-export function ResetPasswordForm({
-  resetPasswordForm,
+export function UpdatePasswordForm({
+  updatePasswordForm,
   handleSubmit,
   isPending,
-}: ResetPasswordFormProps) {
+}: UpdatePasswordFormProps) {
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-sm">
-        <Form {...resetPasswordForm}>
+        <Form {...updatePasswordForm}>
           <form
-            onSubmit={resetPasswordForm.handleSubmit((data) =>
+            onSubmit={updatePasswordForm.handleSubmit((data) =>
               handleSubmit?.(data)
             )}
             className="flex flex-col gap-6"
@@ -37,7 +37,7 @@ export function ResetPasswordForm({
             </div>
             <div className="grid gap-6">
               <FormField
-                control={resetPasswordForm.control}
+                control={updatePasswordForm.control}
                 name="newPassword"
                 render={({ field }) => (
                   <FormItem className="grid gap-3">
@@ -55,16 +55,16 @@ export function ResetPasswordForm({
                 )}
               />
 
-              {resetPasswordForm.watch("newPassword") && (
+              {updatePasswordForm.watch("newPassword") && (
                 <Suspense fallback={null}>
                   <PasswordStrengthChecks
-                    password={resetPasswordForm.watch("newPassword")}
+                    password={updatePasswordForm.watch("newPassword")}
                   />
                 </Suspense>
               )}
 
               <FormField
-                control={resetPasswordForm.control}
+                control={updatePasswordForm.control}
                 name="confirmNewPassword"
                 render={({ field }) => (
                   <FormItem className="grid gap-3">

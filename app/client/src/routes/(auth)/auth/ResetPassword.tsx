@@ -5,18 +5,18 @@ import { useApiMutation } from "@/hooks/hook";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  resetPasswordSchema,
-  type resetPasswordSchemaType,
+  updatePasswordSchema,
+  type updatePasswordSchemaType,
 } from "@shared/schemas/auth/auth.schema";
-import { ResetPasswordForm } from "@/components/auth/forms/password/reset-password-02";
+import { UpdatePasswordForm } from "@/components/auth/forms/password/reset-password-02";
 import { API } from "@/config/config";
 
 const ResetPassword = () => {
-  const resetPasswordForm = useForm({
-    resolver: zodResolver(resetPasswordSchema),
+  const updatePasswordForm = useForm({
+    resolver: zodResolver(updatePasswordSchema),
     defaultValues: {
-      confirmNewPassword: "",
       newPassword: "",
+      confirmNewPassword: "",
     },
   });
 
@@ -25,14 +25,14 @@ const ResetPassword = () => {
     API.AUTH.PRIVATE.UPDATE_PASSWORD,
     {
       onSuccess: (data) => {
-        resetPasswordForm.reset();
+        updatePasswordForm.reset();
         toast.success(data.message);
       },
       onError: (err) => toast.error(err.response?.data.message),
     }
   );
 
-  const handleResetPassword = async (data: resetPasswordSchemaType) =>
+  const handleUpdatePassword = async (data: updatePasswordSchemaType) =>
     await updatePassword(data);
 
   return (
@@ -40,10 +40,10 @@ const ResetPassword = () => {
       <div className="hidden lg:flex p-5 absolute">
         <AppLogo />
       </div>
-      <ResetPasswordForm
-        resetPasswordForm={resetPasswordForm}
+      <UpdatePasswordForm
+        updatePasswordForm={updatePasswordForm}
         isPending={isPending}
-        handleSubmit={handleResetPassword}
+        handleSubmit={handleUpdatePassword}
       />
     </div>
   );

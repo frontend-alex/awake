@@ -2,7 +2,7 @@ import z from "zod";
 import AppLogo from "@/components/AppLogo";
 
 import { toast } from "sonner";
-import { makeForm } from "@/lib/utils";
+import { useFormWithSchema } from "@/lib/utils";
 import { useApiMutation } from "@/hooks/hook";
 import { emailSchema } from "@shared/schemas/user/user.schema";
 import { ForgotPasswordForm } from "@/components/auth/forms/password/forgot-password-02";
@@ -11,7 +11,7 @@ import { API } from "@/config/config";
 const ForgotPassword = () => {
   const emailSchemaObject = z.object({ email: emailSchema });
 
-  const forgotPasswordForm = makeForm(emailSchemaObject, {
+  const forgotPasswordForm = useFormWithSchema(emailSchemaObject, {
     email: "",
   });
 

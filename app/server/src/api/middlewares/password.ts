@@ -14,7 +14,10 @@ export const resetTokenMiddleware: RequestHandler = (
   _res: Response,
   next: NextFunction
 ) => {
-  const token = req.cookies?.reset_token;
+  const accessToken = req.cookies?.access_token;
+  const resetToken = req.cookies?.reset_token;
+
+  const token = accessToken || resetToken;
 
   if (!token) {
     return next(createError("INVALID_TOKEN"));

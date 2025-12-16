@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { Separator } from "@/components/ui/separator";
-import { type UseFormReturn } from "react-hook-form";
+import { type UseFormReturn, type FieldPath } from "react-hook-form";
 import { CircleAlert, LoaderCircle } from "lucide-react";
 import { emailSchema, usernameSchema } from "@shared/schemas/user/user.schema";
 import {
@@ -49,7 +49,7 @@ const ProfileData = () => {
     title: string;
     description: string;
     form: UseFormReturn<z.infer<T>>;
-    name: keyof z.infer<T>;
+    name: FieldPath<z.infer<T>>;
     type: string;
     placeholder: string;
     onSubmit: (data: z.infer<T>) => void;
@@ -78,7 +78,7 @@ const ProfileData = () => {
         >
           <FormField
             control={form.control}
-            name={name as keyof z.infer<T> & string}
+            name={name}
             render={({ field }) => (
               <FormItem className="grid gap-3">
                 <FormControl>

@@ -25,27 +25,39 @@ const providers = (_req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+// Cookie options for tokens
+const ACCESS_TOKEN_OPTIONS = {
+  httpOnly: true,
+  secure: env.NODE_ENV === "production",
+  sameSite: "strict" as const,
+  maxAge: 60 * 60 * 1000, // 1 hour
+  path: "/",
+};
+
+const REFRESH_TOKEN_OPTIONS = {
+  httpOnly: true,
+  secure: env.NODE_ENV === "production",
+  sameSite: "strict" as const,
+  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  path: "/",
+};
+
 const handleAuthCallback = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const token = await AuthService.handleAuthCallback(req.user as DecodedUser);
+    const { accessToken, refreshToken } = await AuthService.handleAuthCallback(req.user as DecodedUser);
 
     const redirectUrl = Array.isArray(env.CORS_ORIGINS)
       ? env.CORS_ORIGINS[0]
       : env.CORS_ORIGINS;
 
-    res.cookie("access_token", token, {
-      httpOnly: true,
-      secure: env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      path: "/",
-    });
+    res.cookie("access_token", accessToken, ACCESS_TOKEN_OPTIONS);
+    res.cookie("refresh_token", refreshToken, REFRESH_TOKEN_OPTIONS);
 
-    res.status(201).redirect(`${redirectUrl}/auth/callback?token=${token}`);
+    res.status(201).redirect(`${redirectUrl}/auth/callback`);
   } catch (err) {
     next(err);
   }
@@ -55,15 +67,10 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
   const { email, password } = req.body;
 
   try {
-    const token = await AuthService.login(email, password);
+    const { accessToken, refreshToken } = await AuthService.login(email, password);
 
-    res.cookie("access_token", token, {
-      httpOnly: true,
-      secure: env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      path: "/",
-    });
+    res.cookie("access_token", accessToken, ACCESS_TOKEN_OPTIONS);
+    res.cookie("refresh_token", refreshToken, REFRESH_TOKEN_OPTIONS);
 
     res.status(201).json({
       success: true,
@@ -106,7 +113,7 @@ const updatePassword = async (
 
     res.status(201).json({
       success: true,
-      message: "Password successfully changed",
+      message: "Password successfully updated",
     });
   } catch (err) {
     next(err);
@@ -196,8 +203,43 @@ const resetPassword = async (
   }
 };
 
+const refresh = async (req: Request, res: Response, next: NextFunction) => {
+  const refreshToken = req.cookies?.refresh_token;
+
+  if (!refreshToken) {
+    return res.status(401).json({
+      success: false,
+      message: "Refresh token not found",
+    });
+  }
+
+  try {
+    const { accessToken, refreshToken: newRefreshToken } = await AuthService.refreshTokens(refreshToken);
+
+    res.cookie("access_token", accessToken, ACCESS_TOKEN_OPTIONS);
+    res.cookie("refresh_token", newRefreshToken, REFRESH_TOKEN_OPTIONS);
+
+    res.status(200).json({
+      success: true,
+      message: "Tokens refreshed successfully",
+    });
+  } catch (err) {
+    // Clear invalid tokens
+    res.clearCookie("access_token", { path: "/" });
+    res.clearCookie("refresh_token", { path: "/" });
+    next(err);
+  }
+};
+
 const logout = async (_req: Request, res: Response, _next: NextFunction) => {
   res.clearCookie("access_token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    path: "/",
+  });
+
+  res.clearCookie("refresh_token", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
@@ -213,6 +255,7 @@ const logout = async (_req: Request, res: Response, _next: NextFunction) => {
 export const AuthController = {
   login,
   logout,
+  refresh,
   sendOtp,
   register,
   providers,

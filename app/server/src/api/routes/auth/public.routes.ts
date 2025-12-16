@@ -17,6 +17,7 @@ const router = Router();
 
 router.post("/login", validate(loginSchema), AuthController.login);
 router.post("/register", validate(registrationSchema), AuthController.register);
+router.post("/refresh", AuthController.refresh);
 
 router.post(
   "/send-otp",

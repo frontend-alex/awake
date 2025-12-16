@@ -4,6 +4,7 @@ import type {
   OtpSchemaType,
   RegistrationSchemaType,
   resetPasswordSchemaType,
+  updatePasswordSchemaType,
 } from "@shared/schemas/auth/auth.schema";
 import type { Providers } from "@/components/auth/forms/buttons/provider-buttons";
 
@@ -33,6 +34,12 @@ export interface OtpFormProps {
 export interface ForgotPasswordFormProps {
   forgotPasswordForm: UseFormReturn<{ email: string }>;
   handleSubmit: (data: { email: string }) => void;
+  isPending: boolean;
+}
+
+export interface UpdatePasswordFormProps {
+  updatePasswordForm: UseFormReturn<updatePasswordSchemaType>;
+  handleSubmit: (data: updatePasswordSchemaType) => void;
   isPending: boolean;
 }
 
