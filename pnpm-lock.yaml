@@ -306,6 +306,9 @@ importers:
       passport-twitter:
         specifier: ^1.0.4
         version: 1.0.4
+      shared:
+        specifier: workspace:*
+        version: link:../../packages/shared
       uuid:
         specifier: ^11.1.0
         version: 11.1.0
