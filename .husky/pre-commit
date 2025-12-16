@@ -1,34 +1,71 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-echo "  Running pre-commit quality checks..."
+echo ""
+echo "╔══════════════════════════════════════════════════════════════╗"
+echo "║              PRE-COMMIT QUALITY GATE                         ║"
+echo "╚══════════════════════════════════════════════════════════════╝"
+echo ""
+
+# Step 1: Build
+echo "┌─────────────────────────────────────────────────────────────┐"
+echo "│  Step 1/3: Building all packages...                         │"
+echo "└─────────────────────────────────────────────────────────────┘"
+pnpm build
+BUILD_EXIT_CODE=$?
+
+if [ $BUILD_EXIT_CODE -ne 0 ]; then
+  echo ""
+  echo "╔══════════════════════════════════════════════════════════════╗"
+  echo "║  ✗ BUILD FAILED - Commit aborted                            ║"
+  echo "║    Fix TypeScript/build errors before committing.            ║"
+  echo "╚══════════════════════════════════════════════════════════════╝"
+  exit $BUILD_EXIT_CODE
+fi
 
 echo ""
-echo "  Step 1/2: Running tests..."
-pnpm test
+echo "  ✓ Build passed"
+echo ""
+
+# Step 2: Test (uses already-built artifacts)
+echo "┌─────────────────────────────────────────────────────────────┐"
+echo "│  Step 2/3: Running tests against built artifacts...         │"
+echo "└─────────────────────────────────────────────────────────────┘"
+pnpm test:only
 TEST_EXIT_CODE=$?
 
 if [ $TEST_EXIT_CODE -ne 0 ]; then
   echo ""
-  echo "  Tests failed. Commit aborted."
-  echo "   Fix failing tests before committing."
+  echo "╔══════════════════════════════════════════════════════════════╗"
+  echo "║  ✗ TESTS FAILED - Commit aborted.                            ║"
+  echo "║    Fix failing tests before committing.                      ║"
+  echo "╚══════════════════════════════════════════════════════════════╝"
   exit $TEST_EXIT_CODE
 fi
 
 echo ""
-echo "  Tests passed."
+echo "  ✓ Tests passed"
 echo ""
-echo "  Step 2/2: Running lint checks..."
+
+# Step 3: Lint
+echo "┌─────────────────────────────────────────────────────────────┐"
+echo "│  Step 3/3: Running lint checks...                           │"
+echo "└─────────────────────────────────────────────────────────────┘"
 pnpm lint
 LINT_EXIT_CODE=$?
 
 if [ $LINT_EXIT_CODE -ne 0 ]; then
   echo ""
-  echo "   Lint checks failed. Commit aborted."
-  echo "   Fix linting errors before committing."
+  echo "╔══════════════════════════════════════════════════════════════╗"
+  echo "║  ✗ LINT FAILED - Commit aborted                              ║"
+  echo "║    Fix linting errors before committing.                     ║"
+  echo "╚══════════════════════════════════════════════════════════════╝"
   exit $LINT_EXIT_CODE
 fi
 
 echo ""
-echo "  All quality checks passed. Proceeding with commit."
-
+echo "╔══════════════════════════════════════════════════════════════╗"
+echo "║  ✓ ALL QUALITY CHECKS PASSED                                 ║"
+echo "║    Proceeding with commit...                                 ║"
+echo "╚══════════════════════════════════════════════════════════════╝"
+echo ""
