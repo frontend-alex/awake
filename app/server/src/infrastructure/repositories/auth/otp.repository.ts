@@ -1,6 +1,7 @@
 import { Otp } from "@/core/models/Otp";
 import { OtpType } from "@shared/types/otp";
 import { generateOTP } from "@/shared/utils/utils";
+import type { mongo } from "mongoose";
 
 export const createOtp = async (userId: string, type: OtpType, expiresInMinutes: number = 5) => {
   const code = generateOTP();
@@ -34,11 +35,11 @@ export const markAsUsed = async (otpId: string) => {
   return await Otp.findByIdAndDelete(otpId);
 };
 
-export const invalidateUserOtps = async (userId: string, type: OtpType) => {
+export const invalidateUserOtps = async (userId: string, type: OtpType): Promise<mongo.DeleteResult> => {
   return await Otp.deleteMany({ userId, type, isUsed: false });
 };
 
-export const cleanupExpiredOtps = async () => {
+export const cleanupExpiredOtps = async (): Promise<mongo.DeleteResult> => {
   return await Otp.deleteMany({
     expiresAt: { $lt: new Date() }
   });

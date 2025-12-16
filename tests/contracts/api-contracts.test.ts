@@ -14,7 +14,6 @@ import {
   passwordSchema,
   updateUserSchema 
 } from '@shared/schemas/user/user.schema'
-import type { ApiResponse, ApiErrorResponse } from '@shared/types/api'
 
 describe('API Contracts', () => {
   describe('User Schema Contracts', () => {

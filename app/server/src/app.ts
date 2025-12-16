@@ -87,7 +87,7 @@ class AppServer {
    */
   private configureRoutes() {
     // Basic health check endpoint
-    this.app.get("/health", (req, res) => {
+    this.app.get("/health", (_req, res) => {
       res.status(201).json({ status: "ok", url:getAppUrl() });
     }); 
 

@@ -227,7 +227,7 @@ const refresh = async (req: Request, res: Response, next: NextFunction) => {
     // Clear invalid tokens
     res.clearCookie("access_token", { path: "/" });
     res.clearCookie("refresh_token", { path: "/" });
-    next(err);
+    return next(err);
   }
 };
 

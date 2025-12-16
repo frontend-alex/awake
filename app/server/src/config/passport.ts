@@ -7,7 +7,7 @@ import { AuthRepo } from "@/infrastructure/repositories/auth/auth.repository";
 
 strategies.forEach(({ Strategy, config, label }) => {
   passport.use(
-    new Strategy(config, async (accessToken, refreshToken, profile, done) => {
+    new Strategy(config, async (_accessToken, _refreshToken, profile, done) => {
       try {
         const email = profile.emails?.[0]?.value;
         const username = profile.displayName || profile.username || email || "unknown-user";

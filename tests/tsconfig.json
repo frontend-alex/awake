@@ -1,0 +1,32 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    // Bundler mode for Vitest
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "moduleDetection": "force",
+    "verbatimModuleSyntax": true,
+
+    // Test environment
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": ["vitest/globals"],
+    "typeRoots": ["../node_modules/@types", "../app/server/node_modules/@types"],
+
+    // No emit - Vitest handles execution
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+
+    // Relax strict checks for test files
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+
+    // Path aliases
+    "baseUrl": "..",
+    "paths": {
+      "@/*": ["app/client/src/*"],
+      "@server/*": ["app/server/src/*"],
+      "@shared/*": ["packages/shared/src/*"]
+    }
+  },
+  "include": ["./**/*.ts", "./**/*.tsx"]
+}

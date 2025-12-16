@@ -7,7 +7,7 @@ import { UserController } from "@/api/controllers/user/user.controller";
 import { updatePasswordSchema } from "@shared/schemas/auth/auth.schema";
 
 
-const router = Router();
+const router: ReturnType<typeof Router> = Router();
 
 router.use(jwtMiddleware);
 

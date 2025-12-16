@@ -1,17 +1,24 @@
 {
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "composite": true,
-    "declaration": true,
+    // NodeNext for environment-agnostic output
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+
+    // Environment-agnostic - no browser/node globals
+    "lib": ["ES2022"],
+
+    // Output configuration
     "outDir": "build",
     "rootDir": "src",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "module": "commonjs",
-    "target": "es2016",
-    "moduleResolution": "node",
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+
+    // CJS output for maximum compatibility
     "verbatimModuleSyntax": false,
-    "erasableSyntaxOnly": false,
+
+    // Path aliases
     "baseUrl": ".",
     "paths": {
       "@shared/*": ["src/*"]

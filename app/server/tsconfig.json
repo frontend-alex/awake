@@ -1,16 +1,23 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "typeRoots": ["./src/express-user.d.ts", "node_modules/@types"],
-    "target": "es2016",
-    "module": "commonjs",
-    "moduleResolution": "node",
+    // NodeNext for Node.js runtime
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+
+    // Server-specific
+    "lib": ["ES2022"],
+    "types": ["node"],
+
+    // Output configuration
     "outDir": "build",
     "rootDir": "src",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "ignoreDeprecations": "6.0",
+    "composite": true,
+
+    // CJS interop - server uses CommonJS packages
+    "verbatimModuleSyntax": false,
+
+    // Path aliases
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],

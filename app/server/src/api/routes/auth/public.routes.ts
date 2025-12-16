@@ -13,7 +13,7 @@ import {
 } from "@shared/schemas/auth/auth.schema";
 import { resetTokenMiddleware } from "@/api/middlewares/password";
 
-const router = Router();
+const router: ReturnType<typeof Router> = Router();
 
 router.post("/login", validate(loginSchema), AuthController.login);
 router.post("/register", validate(registrationSchema), AuthController.register);
