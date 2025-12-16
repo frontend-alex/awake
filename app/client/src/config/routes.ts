@@ -37,7 +37,7 @@ export const ROUTE_HELPERS = {
   },
 
   isPublicRoute: (path: string): boolean => {
-    return Object.values(PUBLIC_ROUTES).includes(path as any);
+    return (Object.values(PUBLIC_ROUTES) as string[]).includes(path);
   },
 } as const;
 

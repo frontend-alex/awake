@@ -16,7 +16,11 @@ export const getUserInitials = (username: string) =>
     .toUpperCase()
     .slice(0, 2);
 
-export const makeForm = <T extends z.ZodTypeAny>(
+/**
+ * Custom hook factory for creating forms with Zod validation
+ * Must be called at the top level of a React component
+ */
+export const useFormWithSchema = <T extends z.ZodTypeAny>(
   schema: T,
   defaultValues: z.infer<T>
 ) =>

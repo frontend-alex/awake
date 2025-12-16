@@ -14,7 +14,7 @@ export type ModuleLoader<T extends PartialModuleProps = PartialModuleProps> = Re
 type FilterFn = (filename: string, user: User) => boolean;
 
 
-type UseDynamicPartialsOptions<T extends Record<string, unknown> = {}> = {
+type UseDynamicPartialsOptions<T extends Record<string, unknown> = Record<string, unknown>> = {
   partialModules: ModuleLoader<PartialModuleProps & T>;
   user: User | null | undefined;
   refetchUser: () => void;
@@ -37,7 +37,7 @@ type UseDynamicPartialsOptions<T extends Record<string, unknown> = {}> = {
  * 
  * @returns JSX.Elements array for rendering
  */
-export function useDynamicPartials<T extends Record<string, unknown> = {}>({
+export function useDynamicPartials<T extends Record<string, unknown> = Record<string, unknown>>({
   partialModules,
   user,
   refetchUser,
@@ -52,7 +52,7 @@ export function useDynamicPartials<T extends Record<string, unknown> = {}>({
     if (!user) return;
 
     const loadPartials = async () => {
-      let entries = Object.entries(partialModules);
+      const entries = Object.entries(partialModules);
       entries.sort(([a], [b]) => a.localeCompare(b));
       if (reverseOrder) entries.reverse();
 
@@ -84,7 +84,7 @@ export function useDynamicPartials<T extends Record<string, unknown> = {}>({
     };
 
     loadPartials();
-  }, [user?.hasPassword, partialModules, refetchUser, extraProps, border, filterFn, reverseOrder]);
+  }, [user, partialModules, refetchUser, extraProps, border, filterFn, reverseOrder]);
 
   return partials;
 }

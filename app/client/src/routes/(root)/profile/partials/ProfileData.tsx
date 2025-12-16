@@ -16,7 +16,7 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { makeForm } from "@/lib/utils";
+import { useFormWithSchema } from "@/lib/utils";
 import { API } from "@/config/config";
 import { ROUTES } from "@/config/routes";
 
@@ -37,11 +37,11 @@ const ProfileData = () => {
   const usernameSchemaObject = z.object({ username: usernameSchema });
   const emailSchemaObject = z.object({ email: emailSchema });
 
-  const usernameForm = makeForm(usernameSchemaObject, {
+  const usernameForm = useFormWithSchema(usernameSchemaObject, {
     username: user?.username ?? "",
   });
 
-  const emailForm = makeForm(emailSchemaObject, {
+  const emailForm = useFormWithSchema(emailSchemaObject, {
     email: user?.email ?? "",
   });
 
@@ -78,7 +78,7 @@ const ProfileData = () => {
         >
           <FormField
             control={form.control}
-            name={name as any}
+            name={name as keyof z.infer<T> & string}
             render={({ field }) => (
               <FormItem className="grid gap-3">
                 <FormControl>

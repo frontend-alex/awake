@@ -12,7 +12,7 @@ import { Trash } from "lucide-react";
 import { TriggerWrapper } from "@/components/TriggerWrapper";
 
 interface DeleteDialogProps {
-  icon?: any,
+  icon?: React.ComponentType<{ className?: string }>,
   onConfirm: () => void;
   title?: string;
   description?: string;

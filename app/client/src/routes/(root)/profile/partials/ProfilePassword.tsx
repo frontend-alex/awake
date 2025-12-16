@@ -26,8 +26,6 @@ const PasswordStrengthChecks = lazy(
 );
 
 const ProfilePassword = ({ user }: { user: User }) => {
-  if (user.provider != AccountProviders.Credentials) return null;
-
   const updatePasswordsForm = useForm({
     resolver: zodResolver(updatePasswordSchema),
     defaultValues: {
@@ -54,6 +52,8 @@ const ProfilePassword = ({ user }: { user: User }) => {
 
   const handleUpdatePassword = async (data: updatePasswordSchemaType) =>
     await updatePassword(data);
+
+  if (user.provider !== AccountProviders.Credentials) return null;
 
   return (
     <div className="space-y-8 max-w-3xl mt-5">
