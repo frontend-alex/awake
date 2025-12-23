@@ -130,8 +130,19 @@ api.interceptors.request.use(
 // Response Interceptor - Error Handling & Token Refresh
 // ─────────────────────────────────────────────────────────────────────────────
 
-const isRefreshEndpoint = (url?: string): boolean =>
-  Boolean(url?.includes(API.AUTH.PUBLIC.REFRESH));
+// Endpoints where refresh should not be attempted:
+// - All public auth endpoints (login, register, etc.) - user isn't authenticated yet
+// - GET /me: Used to check auth status - 401 means "not authenticated"  
+// - POST /refresh: The refresh endpoint itself - prevents infinite loops
+const shouldSkipRefresh = (url?: string): boolean => {
+  if (!url) return false;
+  
+  if (ROUTE_HELPERS.isPublicRoute(url)) {
+    return true;
+  }
+  
+  return false;
+};
 
 const handleSessionExpired = () => {
   refreshQueue.clear();
@@ -164,7 +175,7 @@ const attemptTokenRefresh = async (
 
     return api(originalRequest);
   } catch (refreshError) {
-    const error = refreshError as AxiosError;
+    const error = refreshError as AxiosError<ApiErrorResponse>;
 
     emitAuthEvent(AUTH_EVENTS.REFRESH_FAILED, error);
     refreshQueue.processQueue(error);
@@ -210,12 +221,10 @@ api.interceptors.response.use(
 
     // Handle 401 Unauthorized - attempt token refresh
     if (error.response?.status === 401 && !originalRequest._retry) {
-      // Don't retry refresh endpoint - prevents infinite loop
-      if (isRefreshEndpoint(originalRequest.url)) {
-        handleSessionExpired();
+      if (shouldSkipRefresh(originalRequest.url)) {
         return Promise.reject(error);
       }
-
+      
       return attemptTokenRefresh(originalRequest);
     }
 

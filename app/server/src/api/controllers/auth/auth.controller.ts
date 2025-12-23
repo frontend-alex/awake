@@ -207,7 +207,7 @@ const refresh = async (req: Request, res: Response, next: NextFunction) => {
   const refreshToken = req.cookies?.refresh_token;
 
   if (!refreshToken) {
-    return res.status(401).json({
+    return res.status(400).json({
       success: false,
       message: "Refresh token not found",
     });
