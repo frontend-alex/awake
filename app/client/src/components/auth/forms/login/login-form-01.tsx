@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/form";
 import { ProviderButtons } from "../buttons/provider-buttons";
 import { config } from "@shared/config/config";
+import { ROUTES } from "@/config/routes";
 
 export function LoginForm({
   loginForm,
@@ -70,7 +71,7 @@ export function LoginForm({
                           <div className="flex items-center">
                             <Label htmlFor="password">Password</Label>
                             <Link
-                              to="/forgot-password"
+                              to={ROUTES.PUBLIC.FORGOT_PASSWORD}
                               className="ml-auto text-sm underline-offset-2 hover:underline"
                             >
                               Forgot your password?
