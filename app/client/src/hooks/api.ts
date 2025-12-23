@@ -6,7 +6,7 @@ import axios, {
 } from "axios";
 import type { ApiErrorResponse } from "@shared/types/api";
 import { API } from "@/config/config";
-import { ROUTES } from "@/config/routes";
+import { ROUTE_HELPERS, ROUTES } from "@/config/routes";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Configuration
@@ -136,7 +136,12 @@ const isRefreshEndpoint = (url?: string): boolean =>
 const handleSessionExpired = () => {
   refreshQueue.clear();
   emitAuthEvent(AUTH_EVENTS.SESSION_EXPIRED);
-  window.location.href = ROUTES.PUBLIC.LOGIN;
+  
+  // Don't redirect if we're already on a public/auth route to prevent refresh loops
+  
+  if (!ROUTE_HELPERS.isPublicRoute(window.location.pathname)) {
+    window.location.href = ROUTES.PUBLIC.LOGIN;
+  }
 };
 
 const attemptTokenRefresh = async (
