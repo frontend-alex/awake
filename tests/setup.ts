@@ -1,11 +1,10 @@
 /**
  * Global Test Setup
  * 
- * Configures testing environment for both client and server tests
+ * Configures testing environment for server and shared tests
  */
 
-import '@testing-library/jest-dom'
-import { vi, beforeAll, afterEach, afterAll } from 'vitest'
+import { afterAll, afterEach, beforeAll, vi } from 'vitest'
 
 // Set test environment
 process.env.NODE_ENV = 'test'

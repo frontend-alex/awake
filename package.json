@@ -1,5 +1,5 @@
 {
-  "name": "mern-stack-boilerplate",
+  "name": "awake-monorepo",
   "version": "1.0.0",
   "private": true,
   "workspaces": [
@@ -9,6 +9,8 @@
   "packageManager": "pnpm@10.26.0",
   "scripts": {
     "dev": "turbo run dev",
+    "dev:server": "pnpm --filter server run dev",
+    "dev:mobile": "pnpm --filter mobile run start",
     "build": "turbo run build",
     "lint": "turbo run lint",
     "test": "pnpm build && vitest run",
@@ -22,27 +24,15 @@
     "prepare": "husky install"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^16.3.0",
-    "@testing-library/user-event": "^14.6.1",
     "@types/jsonwebtoken": "^9.0.10",
-    "@types/react": "^19.1.8",
-    "@types/react-dom": "^19.1.6",
     "@types/supertest": "^6.0.3",
-    "@vitejs/plugin-react": "^4.7.0",
     "@vitest/ui": "^3.2.4",
     "concurrently": "^9.2.0",
-    "happy-dom": "^20.0.1",
     "husky": "^8.0.0",
-    "jsdom": "^27.0.0",
     "jsonwebtoken": "^9.0.2",
     "lint-staged": "^13.0.0",
-    "lucide-react": "^0.525.0",
     "nodemon": "^3.1.10",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "react-router-dom": "^7.7.1",
-    "shared": "file:packages\\shared",
+    "shared": "workspace:*",
     "supertest": "^7.1.4",
     "turbo": "^2.5.4",
     "vitest": "^3.2.4"
