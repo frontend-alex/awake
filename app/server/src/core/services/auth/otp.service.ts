@@ -9,7 +9,12 @@ import {
 import { createError } from "@/core/error/errors";
 import { EmailUtils } from "@/infrastructure/email/email";
 
-
+/**
+ * Sends an OTP code to the user's email address
+ * @param userId - The user ID to send the OTP for
+ * @param email - The email address to send the OTP to
+ * @param type - The type of OTP (default: EmailVerification)
+ */
 export const sendOtp = async (userId: string, email: string, type: OtpType = OtpType.EmailVerification) => {
   try {
     const otp = await createOtp(userId, type, 5); // 5 minutes expiry
@@ -28,6 +33,12 @@ export const sendOtp = async (userId: string, email: string, type: OtpType = Otp
   }
 };
 
+/**
+ * Verifies an OTP code for a user
+ * @param userId - The user ID to verify the OTP for
+ * @param code - The OTP code to verify
+ * @param type - The type of OTP (default: EmailVerification)
+ */
 export const verifyOtp = async (userId: string, code: string, type: OtpType = OtpType.EmailVerification) => {
   try {
     const otp = await findByCodeAndType(code, type);
@@ -56,6 +67,13 @@ export const verifyOtp = async (userId: string, code: string, type: OtpType = Ot
   }
 };
 
+/**
+ * Resends an OTP code to the user's email address
+ * Invalidates existing OTPs before sending a new one
+ * @param userId - The user ID to resend the OTP for
+ * @param email - The email address to send the OTP to
+ * @param type - The type of OTP (default: EmailVerification)
+ */
 export const resendOtp = async (userId: string, email: string, type: OtpType = OtpType.EmailVerification) => {
   try {
     // Invalidate existing OTPs

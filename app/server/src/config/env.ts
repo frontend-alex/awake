@@ -1,5 +1,5 @@
 import * as dotenv from "dotenv";
-import { cleanEnv, str, num, bool, makeValidator } from "envalid";
+import { bool, cleanEnv, makeValidator, num, str } from "envalid";
 
 const corsValidator = makeValidator((input: string) => {
   const origins = input.split(",");
@@ -21,7 +21,7 @@ export const env = cleanEnv(process.env, {
   TRUST_PROXY: num({ default: 0 }),
   RATE_LIMIT_WINDOW_MS: num({ default: 15 * 60 * 1000 }),
   RATE_LIMIT_MAX: num({ default: 100 }),
-  CORS_ORIGINS: corsValidator({ default: ["http://localhost:5173"] }),
+  CORS_ORIGINS: corsValidator({ default: ["http://localhost:8081"] }),
   CSRF_COOKIE_SECURE: bool({ default: false }),
 
   // HTTPS

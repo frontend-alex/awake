@@ -1,4 +1,4 @@
-import { config } from "@shared/config/config";
+import { PASSWORD_RULES } from "@shared/config/config";
 import z from "zod";
 
 export const emailSchema = z.string().email("Invalid email address");
@@ -7,24 +7,22 @@ export const usernameSchema = z
   .string()
   .min(3, "Username must be at least 3 characters long");
 
-const rules = config.user.passwordRules;
-
 export const passwordSchema = z
   .string()
   .min(
-    rules.minLength,
-    `Password must be at least ${rules.minLength} characters long`
+    PASSWORD_RULES.minLength,
+    `Password must be at least ${PASSWORD_RULES.minLength} characters long`
   )
-  .refine((val) => !rules.requireUppercase || /[A-Z]/.test(val), {
+  .refine((val) => !PASSWORD_RULES.requireUppercase || /[A-Z]/.test(val), {
     message: "Must contain an uppercase letter",
   })
-  .refine((val) => !rules.requireLowercase || /[a-z]/.test(val), {
+  .refine((val) => !PASSWORD_RULES.requireLowercase || /[a-z]/.test(val), {
     message: "Must contain a lowercase letter",
   })
-  .refine((val) => !rules.requireNumber || /[0-9]/.test(val), {
+  .refine((val) => !PASSWORD_RULES.requireNumber || /[0-9]/.test(val), {
     message: "Must contain a number",
   })
-  .refine((val) => !rules.requireSymbol || /[^a-zA-Z0-9]/.test(val), {
+  .refine((val) => !PASSWORD_RULES.requireSymbol || /[^a-zA-Z0-9]/.test(val), {
     message: "Must contain a special character",
   });
 

@@ -2,3 +2,4 @@ packages:
   - "app/mobile"
   - "app/server"
   - "packages/shared"
+  - "site"

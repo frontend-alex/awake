@@ -8,8 +8,11 @@ import { Strategy as GitHubStrategy } from "passport-github2";
 import { Strategy as TwitterStrategy } from "passport-twitter";
 import { Strategy as LinkedInStrategy } from "passport-linkedin-oauth2";
 import { Strategy as InstagramStrategy } from "passport-instagram";
-import { config } from "@shared/config/config";
+import { OAUTH_PROVIDERS } from "@shared/config/config";
 
+/**
+ * Callback function type for OAuth strategy verification
+ */
 type VerifyCallback = (
   accessToken: string,
   refreshToken: string,
@@ -17,20 +20,37 @@ type VerifyCallback = (
   done: (error: any, user?: any, info?: any) => void
 ) => void;
 
+/**
+ * Constructor interface for Passport strategies
+ */
 interface PassportStrategyConstructor {
   new (options: any, verify: VerifyCallback): passport.Strategy;
 }
 
-const { facebook, github, google, instagram, linkedin, twitter } =
-  config.providers;
+/**
+ * OAuth provider strategy configuration
+ */
+export interface OAuthStrategyConfig {
+  /** Provider name identifier */
+  readonly name: string;
+  /** Display label for the provider */
+  readonly label: string;
+  /** Passport strategy constructor */
+  readonly Strategy: PassportStrategyConstructor;
+  /** Whether this provider is enabled */
+  readonly enabled: boolean;
+  /** Provider-specific configuration options */
+  readonly config: Record<string, any>;
+}
 
-export const strategies: {
-  name: string;
-  Strategy: PassportStrategyConstructor;
-  config: any;
-  label: string;
-  enabled: boolean;
-}[] = [
+const { facebook, github, google, instagram, linkedin, twitter } =
+  OAUTH_PROVIDERS;
+
+/**
+ * Array of configured OAuth authentication strategies
+ * Only enabled providers will be initialized by Passport
+ */
+export const strategies: readonly OAuthStrategyConfig[] = [
   {
     name: "google",
     label: "Google",

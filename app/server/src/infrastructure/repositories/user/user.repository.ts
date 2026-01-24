@@ -1,9 +1,15 @@
 import { IUser, User } from "@/core/models/User";
-import { config } from "@shared/config/config";
+import { ALLOWED_USER_UPDATE_FIELDS } from "@shared/config/config";
 
+/**
+ * Filters update object to only include allowed fields
+ * @param updates - The update object to filter
+ * @param allowedFields - Array of allowed field names
+ * @returns Filtered update object containing only allowed fields
+ */
 function filterAllowedUpdates<T extends Record<string, any>>(
   updates: T,
-  allowedFields: string[]
+  allowedFields: readonly string[]
 ): Partial<T> {
   return Object.fromEntries(
     Object.entries(updates).filter(([key]) => allowedFields.includes(key))
@@ -23,7 +29,7 @@ const updateUser = async (
 ): Promise<IUser | null> => {
   const filteredUpdate = filterAllowedUpdates(
     update,
-    config.user.allowedUpdates
+    ALLOWED_USER_UPDATE_FIELDS
   );
 
   return await User.findOneAndUpdate(query, filteredUpdate, { new: true });
